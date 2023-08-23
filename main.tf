@@ -123,17 +123,17 @@ resource "aws_instance" "myapp-server" {
         private_key = file(var.private_key_location)
     }
 
-    provisioner "file" {
-        source = "entry-script.sh"
-        destination = "/home/ec2-user/entry-script-on-ec2.sh"
-    }
-
     provisioner "remote-exec" {
-        script = file("entry-script.sh")
+        script = "entry-script.sh"
     }
 
     provisioner "local-exec" {
         command = "echo ${self.public_ip} > output.txt"
+    }
+
+    provisioner "file" {
+        source = "entry-script.sh"
+        destination = "/home/ec2-user/entry-script-on-ec2.sh"
     }
 
     tags = {
